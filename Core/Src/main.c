@@ -68,8 +68,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-    SCB_EnableICache(); // ʹ��ICache
-    SCB_EnableDCache(); // ʹ��DCache
+
   /* USER CODE END 1 */
 
   /* Enable the CPU Cache */

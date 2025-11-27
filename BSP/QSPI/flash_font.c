@@ -87,7 +87,7 @@ int8_t FlashFont_Init(void) {
 
   // 验证标志位魔数
   if (flag->magic != FLAG_MAGIC) {
-    printf("字库标志无效，字库可能未烧录");
+    DEBUG_ERROR("字库标志无效，字库可能未烧录");
     return -1;
   }
 
@@ -98,7 +98,7 @@ int8_t FlashFont_Init(void) {
   // 验证对照表魔数
   if (table_header->magic != 0x54424C47) // "TBLG"
   {
-    printf("GB2312对照表标志无效，对照表可能未烧录");
+    DEBUG_ERROR("GB2312对照表标志无效，对照表可能未烧录");
     return -2;
   }
 
@@ -146,7 +146,7 @@ int16_t GB2312_FindIndex_Flash(const char *text) {
   const GB2312_TableEntry_t *pEntry;
 
   if (!g_font_initialized) {
-    printf("GB2312_FindIndex_Flash: 字库未初始化");
+    DEBUG_ERROR("GB2312_FindIndex_Flash: 字库未初始化");
     return -1;
   }
 

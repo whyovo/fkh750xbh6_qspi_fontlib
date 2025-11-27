@@ -73,7 +73,7 @@ int8_t QSPI_W25Qxx_Init(void) {
   if (Device_ID == W25Qxx_FLASH_ID) {
     return QSPI_W25Qxx_OK;
   } else {
-    printf("QSPI Flash ID匹配失败");
+    DEBUG_ERROR("QSPI Flash ID匹配失败");
     return W25Qxx_ERROR_INIT;
   }
 }
@@ -142,12 +142,12 @@ int8_t QSPI_W25Qxx_Reset(void) {
       HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE);
   // 发送复位使能命令
   if (status1 != HAL_OK) {
-    printf("QSPI Flash复位使能失败");
+    DEBUG_ERROR("QSPI Flash复位使能失败");
     return W25Qxx_ERROR_INIT; // 如果发送失败，返回错误信息
   }
   // 使用自动轮询标志位，等待通信结束
   if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash复位使能失败");
+    DEBUG_ERROR("QSPI Flash复位使能失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
 
@@ -156,12 +156,12 @@ int8_t QSPI_W25Qxx_Reset(void) {
   // 发送复位器件命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash复位使能失败");
+    DEBUG_ERROR("QSPI Flash复位使能失败");
     return W25Qxx_ERROR_INIT; // 如果发送失败，返回错误信息
   }
   // 使用自动轮询标志位，等待通信结束
   if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash复位使能失败");
+    DEBUG_ERROR("QSPI Flash复位使能失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK; // 复位成功
@@ -198,13 +198,13 @@ uint32_t QSPI_W25Qxx_ReadID(void) {
   // 发送指令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash读取ID失败");
+    DEBUG_ERROR("QSPI Flash读取ID失败");
     return 0;
   }
   // 接收数据
   if (HAL_QSPI_Receive(&hqspi, QSPI_ReceiveBuff,
                        HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
-    printf("QSPI Flash读取ID失败");
+    DEBUG_ERROR("QSPI Flash读取ID失败");
     return 0;
   }
   // 将得到的数据组合成ID
@@ -246,7 +246,7 @@ int8_t QSPI_W25Qxx_MemoryMappedMode(void) {
   if (HAL_QSPI_MemoryMapped(&hqspi, &s_command, &s_mem_mapped_cfg) !=
       HAL_OK) // 进行配置
   {
-    printf("QSPI内存映射模式切换失败");
+    DEBUG_ERROR("QSPI内存映射模式切换失败");
     return W25Qxx_ERROR_MemoryMapped; // 设置内存映射模式错误
   }
   return QSPI_W25Qxx_OK; // 配置成功
@@ -279,7 +279,7 @@ int8_t QSPI_W25Qxx_WriteEnable(void) {
   // 发送写使能命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash写使能失败");
+    DEBUG_ERROR("QSPI Flash写使能失败");
     return W25Qxx_ERROR_WriteEnable; //
   }
 
@@ -302,7 +302,7 @@ int8_t QSPI_W25Qxx_WriteEnable(void) {
   // 发送轮询等待命令
   if (HAL_QSPI_AutoPolling(&hqspi, &s_command, &s_config,
                            HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
-    printf("QSPI Flash写使能失败");
+    DEBUG_ERROR("QSPI Flash写使能失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK; // 通信正常结束
@@ -336,18 +336,18 @@ int8_t QSPI_W25Qxx_SectorErase(uint32_t SectorAddress) {
 
   // 发送写使能
   if (QSPI_W25Qxx_WriteEnable() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash写使能失败");
+    DEBUG_ERROR("QSPI Flash写使能失败");
     return W25Qxx_ERROR_WriteEnable; // 写使能失败
   }
   // 发出擦除命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash擦除命令发送失败");
+    DEBUG_ERROR("QSPI Flash擦除命令发送失败");
     return W25Qxx_ERROR_Erase; // 擦除失败
   }
   // 使用自动轮询标志位，等待擦除的结束
   if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash擦除失败");
+    DEBUG_ERROR("QSPI Flash擦除失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK; // 擦除成功
@@ -383,18 +383,18 @@ int8_t QSPI_W25Qxx_BlockErase_64K(uint32_t SectorAddress) {
 
   // 发送写使能
   if (QSPI_W25Qxx_WriteEnable() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash写使能失败");
+    DEBUG_ERROR("QSPI Flash写使能失败");
     return W25Qxx_ERROR_WriteEnable; // 写使能失败
   }
   // 发出擦除命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash擦除命令发送失败");
+    DEBUG_ERROR("QSPI Flash擦除命令发送失败");
     return W25Qxx_ERROR_Erase; // 擦除失败
   }
   // 使用自动轮询标志位，等待擦除的结束
   if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash擦除失败");
+    DEBUG_ERROR("QSPI Flash擦除失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK; // 擦除成功
@@ -428,13 +428,13 @@ int8_t QSPI_W25Qxx_ChipErase(void) {
 
   // 发送写使能
   if (QSPI_W25Qxx_WriteEnable() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash写使能失败");
+    DEBUG_ERROR("QSPI Flash写使能失败");
     return W25Qxx_ERROR_WriteEnable; // 写使能失败
   }
   // 发出擦除命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash擦除命令发送失败");
+    DEBUG_ERROR("QSPI Flash擦除命令发送失败");
     return W25Qxx_ERROR_Erase; // 擦除失败
   }
 
@@ -458,7 +458,7 @@ int8_t QSPI_W25Qxx_ChipErase(void) {
   // W25Qxx_ChipErase_TIMEOUT_MAX 为 100S
   if (HAL_QSPI_AutoPolling(&hqspi, &s_command, &s_config,
                            W25Qxx_ChipErase_TIMEOUT_MAX) != HAL_OK) {
-    printf("QSPI Flash擦除失败");
+    DEBUG_ERROR("QSPI Flash擦除失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK;
@@ -498,24 +498,24 @@ int8_t QSPI_W25Qxx_WritePage(uint8_t *pBuffer, uint32_t WriteAddr,
 
   // 写使能
   if (QSPI_W25Qxx_WriteEnable() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash写使能失败");
+    DEBUG_ERROR("QSPI Flash写使能失败");
     return W25Qxx_ERROR_WriteEnable; // 写使能失败
   }
   // 写命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash写命令发送失败");
+    DEBUG_ERROR("QSPI Flash写命令发送失败");
     return W25Qxx_ERROR_TRANSMIT; // 传输数据错误
   }
   // 开始传输数据
   if (HAL_QSPI_Transmit(&hqspi, pBuffer, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash写数据失败");
+    DEBUG_ERROR("QSPI Flash写数据失败");
     return W25Qxx_ERROR_TRANSMIT; // 传输数据错误
   }
   // 使用自动轮询标志位，等待写入的结束
   if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash写入失败");
+    DEBUG_ERROR("QSPI Flash写入失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK; // 写数据成功
@@ -554,20 +554,20 @@ int8_t QSPI_W25Qxx_WriteBuffer(uint8_t *pBuffer, uint32_t WriteAddr,
   do {
     // 发送写使能
     if (QSPI_W25Qxx_WriteEnable() != QSPI_W25Qxx_OK) {
-      printf("QSPI Flash写使能失败");
+      DEBUG_ERROR("QSPI Flash写使能失败");
       return W25Qxx_ERROR_WriteEnable;
     }
 
     // 按页写入数据
     else if (QSPI_W25Qxx_WritePage(write_data, current_addr, current_size) !=
              QSPI_W25Qxx_OK) {
-      printf("QSPI Flash写入失败");
+      DEBUG_ERROR("QSPI Flash写入失败");
       return W25Qxx_ERROR_TRANSMIT;
     }
 
     // 使用自动轮询标志位，等待写入的结束
     else if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-      printf("QSPI Flash写入失败");
+      DEBUG_ERROR("QSPI Flash写入失败");
       return W25Qxx_ERROR_AUTOPOLLING;
     }
 
@@ -619,7 +619,7 @@ int8_t QSPI_W25Qxx_ReadBuffer(uint8_t *pBuffer, uint32_t ReadAddr,
   // 发送读取命令
   if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash读取ID失败");
+    DEBUG_ERROR("QSPI Flash读取ID失败");
     return W25Qxx_ERROR_TRANSMIT; // 传输数据错误
   }
 
@@ -627,13 +627,13 @@ int8_t QSPI_W25Qxx_ReadBuffer(uint8_t *pBuffer, uint32_t ReadAddr,
 
   if (HAL_QSPI_Receive(&hqspi, pBuffer, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) !=
       HAL_OK) {
-    printf("QSPI Flash读取数据失败");
+    DEBUG_ERROR("QSPI Flash读取数据失败");
     return W25Qxx_ERROR_TRANSMIT; // 传输数据错误
   }
 
   // 使用自动轮询标志位，等待接收的结束
   if (QSPI_W25Qxx_AutoPollingMemReady() != QSPI_W25Qxx_OK) {
-    printf("QSPI Flash读取数据失败");
+    DEBUG_ERROR("QSPI Flash读取数据失败");
     return W25Qxx_ERROR_AUTOPOLLING; // 轮询等待无响应
   }
   return QSPI_W25Qxx_OK; // 读取数据成功
