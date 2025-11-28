@@ -1,16 +1,16 @@
 /**
  ******************************************************************************
  * @file    init.h
- * @author  ²Ë²Ëwhy£¨BÕ¾£º²Ë²Ëwhyy£©
- * @brief   ³õÊ¼»¯Í·ÎÄ¼þ£¬Í³Ò»¹ÜÀíÍâÉè³õÊ¼»¯ÓëÖ÷Ñ­»·ÈÎÎñ
- *          Ìá¹©Æ½Ì¨³éÏó²ãºê¶¨Òå£¬±ãÓÚÒÆÖ²µ½²»Í¬HAL¿â
+ * @author  èœèœwhyï¼ˆBç«™ï¼šèœèœwhyyï¼‰
+ * @brief   åˆå§‹åŒ–å¤´æ–‡ä»¶ï¼Œç»Ÿä¸€ç®¡ç†å¤–è®¾åˆå§‹åŒ–ä¸Žä¸»å¾ªçŽ¯ä»»åŠ¡
+ *          æä¾›å¹³å°æŠ½è±¡å±‚å®å®šä¹‰ï¼Œä¾¿äºŽç§»æ¤åˆ°ä¸åŒHALåº“
  ******************************************************************************
  * @attention
  *
- * Ê¹ÓÃËµÃ÷£º
- * 1. ÔÚ´ËÎÄ¼þÖÐ¶¨ÒåÐèÒªÆôÓÃµÄÍâÉèÄ£¿é£¨LED_ENABLE / KEY_ENABLE µÈ£©
- * 2. Æ½Ì¨³éÏóºê£¨GPIO_WritePinµÈ£©Ä¬ÈÏÓ³Éäµ½STM32 HAL¿â£¬¿ÉÖØ¶¨ÒåÒÔÊÊÅäÆäËûÆ½Ì¨
- * 3. init_all() Íê³ÉËùÓÐÍâÉè³õÊ¼»¯£¬main_while() ÔÚÖ÷Ñ­»·ÖÐÖÜÆÚµ÷ÓÃ
+ * ä½¿ç”¨è¯´æ˜Žï¼š
+ * 1. åœ¨æ­¤æ–‡ä»¶ä¸­å®šä¹‰éœ€è¦å¯ç”¨çš„å¤–è®¾æ¨¡å—ï¼ˆLED_ENABLE / KEY_ENABLE ç­‰ï¼‰
+ * 2. å¹³å°æŠ½è±¡å®ï¼ˆGPIO_WritePinç­‰ï¼‰é»˜è®¤æ˜ å°„åˆ°STM32 HALåº“ï¼Œå¯é‡å®šä¹‰ä»¥é€‚é…å…¶ä»–å¹³å°
+ * 3. init_all() å®Œæˆæ‰€æœ‰å¤–è®¾åˆå§‹åŒ–ï¼Œmain_while() åœ¨ä¸»å¾ªçŽ¯ä¸­å‘¨æœŸè°ƒç”¨
  *
  ******************************************************************************
  */
@@ -26,34 +26,34 @@ extern "C"
 #include "stm32h7xx_hal.h"
 
 /*******************************************************************************
- *                              ÍâÉèÊ¹ÄÜ¿ª¹Ø
+ *                              å¤–è®¾ä½¿èƒ½å¼€å…³
  ******************************************************************************/
 /**
- * @brief ÔÚ´Ë´¦¶¨ÒåÐèÒªÆôÓÃµÄÍâÉèÄ£¿é
- * @note  ×¢ÊÍµô¶ÔÓ¦ºê¼´¿É½ûÓÃ¸ÃÄ£¿é£¬¼õÉÙ´úÂëÌå»ý
+ * @brief åœ¨æ­¤å¤„å®šä¹‰éœ€è¦å¯ç”¨çš„å¤–è®¾æ¨¡å—
+ * @note  æ³¨é‡ŠæŽ‰å¯¹åº”å®å³å¯ç¦ç”¨è¯¥æ¨¡å—ï¼Œå‡å°‘ä»£ç ä½“ç§¯
  */
-// #define DEBUG_ENABLE /*!< µ÷ÊÔÊä³öÊ¹ÄÜ */
-#define LED_ENABLE /*!< LEDÇý¶¯Ê¹ÄÜ */
-// #define KEY_ENABLE            /*!< °´¼üÇý¶¯Ê¹ÄÜ */
-// #define BUZZER_ENABLE         /*!< ·äÃùÆ÷Çý¶¯Ê¹ÄÜ */
-// #define DIGITAL_SENSOR_ENABLE /*!< Êý×Ö´«¸ÐÆ÷Çý¶¯Ê¹ÄÜ */
-// #define UI_ENCODER_ENABLE     /*!< UI±àÂëÆ÷Çý¶¯Ê¹ÄÜ */
-#define LCD_SPI_ENABLE    /*!< LCD SPIÇý¶¯Ê¹ÄÜ */
-// #define LCD_RGB_ENABLE    /*!< LCD RGBÇý¶¯Ê¹ÄÜ */
-// #define LCD_RGB_TOUCH_ENABLE /*!< LCD RGB´¥ÃþÇý¶¯Ê¹ÄÜ,´¥ÃþÆÁÊ¹ÓÃ£¬±ØÐëÏÈ¶¨Òå LCD_RGB_ENABLE*/
-#define QSPI_FLASH_ENABLE /*!< QSPI FlashÇý¶¯Ê¹ÄÜ */
-#define FLASH_FONT_ENABLE /*!< Flash×ÖÌåÇý¶¯Ê¹ÄÜ,±ØÐëÓÅÏÈ¶¨ÒåQSPI_FLASH_ENABLE */
-// #define DMIC_ENABLE       /*!< INMP441Êý×ÖÂó¿Ë·çÇý¶¯Ê¹ÄÜ */
-// #define OLED_HARD_ENABLE  /*!< OLEDÓ²¼þI2CÇý¶¯Ê¹ÄÜ */
-// #define OLED_SOFT_ENABLE  /*!< OLEDÈí¼þI2CÇý¶¯Ê¹ÄÜ */
-// #define SDMMC_ENABLE      /*!< SDMMCÇý¶¯Ê¹ÄÜ */
-// #define FATFS_ENABLE      /*!< SD¿¨µÄFATFSÎÄ¼þÏµÍ³Ê¹ÄÜ£¬±ØÐëÓÅÏÈ¶¨ÒåSDMMC_ENABLE */
-// #define SDRAM_ENABLE      /*!< SDRAMÇý¶¯Ê¹ÄÜ */
+// #define DEBUG_ENABLE /*!< è°ƒè¯•è¾“å‡ºä½¿èƒ½ */
+#define LED_ENABLE /*!< LEDé©±åŠ¨ä½¿èƒ½ */
+// #define KEY_ENABLE            /*!< æŒ‰é”®é©±åŠ¨ä½¿èƒ½ */
+// #define BUZZER_ENABLE         /*!< èœ‚é¸£å™¨é©±åŠ¨ä½¿èƒ½ */
+// #define DIGITAL_SENSOR_ENABLE /*!< æ•°å­—ä¼ æ„Ÿå™¨é©±åŠ¨ä½¿èƒ½ */
+// #define UI_ENCODER_ENABLE     /*!< UIç¼–ç å™¨é©±åŠ¨ä½¿èƒ½ */
+#define LCD_SPI_ENABLE    /*!< LCD SPIé©±åŠ¨ä½¿èƒ½ */
+// #define LCD_RGB_ENABLE    /*!< LCD RGBé©±åŠ¨ä½¿èƒ½ */
+// #define LCD_RGB_TOUCH_ENABLE /*!< LCD RGBè§¦æ‘¸é©±åŠ¨ä½¿èƒ½,è§¦æ‘¸å±ä½¿ç”¨ï¼Œå¿…é¡»å…ˆå®šä¹‰ LCD_RGB_ENABLE*/
+#define QSPI_FLASH_ENABLE /*!< QSPI Flashé©±åŠ¨ä½¿èƒ½ */
+#define FLASH_FONT_ENABLE /*!< Flashå­—ä½“é©±åŠ¨ä½¿èƒ½,å¿…é¡»ä¼˜å…ˆå®šä¹‰QSPI_FLASH_ENABLE */
+// #define DMIC_ENABLE       /*!< INMP441æ•°å­—éº¦å…‹é£Žé©±åŠ¨ä½¿èƒ½ */
+// #define OLED_HARD_ENABLE  /*!< OLEDç¡¬ä»¶I2Cé©±åŠ¨ä½¿èƒ½ */
+// #define OLED_SOFT_ENABLE  /*!< OLEDè½¯ä»¶I2Cé©±åŠ¨ä½¿èƒ½ */
+// #define SDMMC_ENABLE      /*!< SDMMCé©±åŠ¨ä½¿èƒ½ */
+// #define FATFS_ENABLE      /*!< SDå¡çš„FATFSæ–‡ä»¶ç³»ç»Ÿä½¿èƒ½ï¼Œå¿…é¡»ä¼˜å…ˆå®šä¹‰SDMMC_ENABLE */
+// #define SDRAM_ENABLE      /*!< SDRAMé©±åŠ¨ä½¿èƒ½ */
 /*******************************************************************************
- *                              Í·ÎÄ¼þ°üº¬£¨×Ô¶¯°üº¬£©
+ *                              å¤´æ–‡ä»¶åŒ…å«ï¼ˆè‡ªåŠ¨åŒ…å«ï¼‰
  ******************************************************************************/
 /**
- * @note ¸ù¾ÝÉÏÃæµÄÊ¹ÄÜ¿ª¹Ø×Ô¶¯°üº¬¶ÔÓ¦µÄÇý¶¯Í·ÎÄ¼þ£¬ÎÞÐèÊÖ¶¯ÐÞ¸Ä
+ * @note æ ¹æ®ä¸Šé¢çš„ä½¿èƒ½å¼€å…³è‡ªåŠ¨åŒ…å«å¯¹åº”çš„é©±åŠ¨å¤´æ–‡ä»¶ï¼Œæ— éœ€æ‰‹åŠ¨ä¿®æ”¹
  */
 #ifdef LED_ENABLE
 #include "GPIO/led.h"
@@ -129,13 +129,13 @@ extern "C"
 
 #ifdef DEBUG_ENABLE
 #include "DEBUG/debug.h"
-#else /* DEBUG_ENABLE Î´¶¨Òå */
+#else /* DEBUG_ENABLE æœªå®šä¹‰ */
 #define Debug_Init() ((void)0)
 #define DEBUG_INFO(msg) ((void)0)
 #define DEBUG_ERROR(msg) ((void)0)
 #endif /* DEBUG_ENABLE */
     /*******************************************************************************
-     *                              Æ½Ì¨³éÏó²ãºê
+     *                              å¹³å°æŠ½è±¡å±‚å®
      ******************************************************************************/
 
 #ifndef GPIO_WritePin
@@ -159,14 +159,14 @@ extern "C"
 #endif
 
 #ifndef Delay_us
-/* ³¢ÊÔÓÃ HAL ¶¨ÒåµÄ SystemCoreClock£¬Ê§°ÜÔò¸øÄ¬ÈÏÖµ 72000000 */
+/* å°è¯•ç”¨ HAL å®šä¹‰çš„ SystemCoreClockï¼Œå¤±è´¥åˆ™ç»™é»˜è®¤å€¼ 72000000 */
 #if defined(SystemCoreClock) && (SystemCoreClock > 0)
 #define __CORE_CLK SystemCoreClock
 #else
-#define __CORE_CLK 72000000UL /* 72 MHz Ä¬ÈÏ */
+#define __CORE_CLK 72000000UL /* 72 MHz é»˜è®¤ */
 #endif
-/* 1¦Ìs Ô¼ÐèÒª¿Õ²Ù×÷´ÎÊý = Ö÷Æµ / 4 / 1000000
- * ³ýÒÔ4ÊÇ´ÖÂÔ¹ÀËãÃ¿Ìõ__NOP()Ö¸ÁîµÄÊ±ÖÓÖÜÆÚÊý
+/* 1Î¼s çº¦éœ€è¦ç©ºæ“ä½œæ¬¡æ•° = ä¸»é¢‘ / 4 / 1000000
+ * é™¤ä»¥4æ˜¯ç²—ç•¥ä¼°ç®—æ¯æ¡__NOP()æŒ‡ä»¤çš„æ—¶é’Ÿå‘¨æœŸæ•°
  */
 #define __NOP_US ((__CORE_CLK / 1000000UL) / 4UL)
 
@@ -182,20 +182,20 @@ extern "C"
 #endif
 
     /*******************************************************************************
-     *                              µ¼³öº¯Êý
+     *                              å¯¼å‡ºå‡½æ•°
      ******************************************************************************/
 
     /**
-     * @brief  ³õÊ¼»¯ËùÓÐÆôÓÃµÄÍâÉè
-     * @note   Ó¦ÔÚÖ÷º¯ÊýÏµÍ³Ê±ÖÓÅäÖÃºó¡¢½øÈëÖ÷Ñ­»·Ç°µ÷ÓÃ
-     * @note   »á¸ù¾Ý LED_ENABLE / KEY_ENABLE µÈºêÓÐÌõ¼þ±àÒë
+     * @brief  åˆå§‹åŒ–æ‰€æœ‰å¯ç”¨çš„å¤–è®¾
+     * @note   åº”åœ¨ä¸»å‡½æ•°ç³»ç»Ÿæ—¶é’Ÿé…ç½®åŽã€è¿›å…¥ä¸»å¾ªçŽ¯å‰è°ƒç”¨
+     * @note   ä¼šæ ¹æ® LED_ENABLE / KEY_ENABLE ç­‰å®æœ‰æ¡ä»¶ç¼–è¯‘
      * @retval None
      */
     void init_all(void);
 
     /**
-     * @brief  Ö÷Ñ­»·ÖÜÆÚÈÎÎñ
-     * @note   ÔÚ while(1) ÖÐÖÜÆÚµ÷ÓÃ£¬ÓÃÓÚÇý¶¯·Ç×èÈûÈÎÎñ£¨Èç°´¼üÉ¨Ãè£©
+     * @brief  ä¸»å¾ªçŽ¯å‘¨æœŸä»»åŠ¡
+     * @note   åœ¨ while(1) ä¸­å‘¨æœŸè°ƒç”¨ï¼Œç”¨äºŽé©±åŠ¨éžé˜»å¡žä»»åŠ¡ï¼ˆå¦‚æŒ‰é”®æ‰«æï¼‰
      * @retval None
      */
     void main_while(void);

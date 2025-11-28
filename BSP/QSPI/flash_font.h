@@ -1,30 +1,30 @@
 /**
  ******************************************************************************
  * @file    flash_font.h
- * @author  ²Ë²Ëwhy(BÕ¾:²Ë²Ëwhyy)
- * @brief   Flash×Ö¿âÇý¶¯Í·ÎÄ¼þ - GB2312ÍêÕû×Ö¿â´æ´¢·½°¸£¨ÄÚ´æÓ³ÉäÄ£Ê½£©
+ * @author  èœèœwhy(Bç«™:èœèœwhyy)
+ * @brief   Flashå­—åº“é©±åŠ¨å¤´æ–‡ä»¶ - GB2312å®Œæ•´å­—åº“å­˜å‚¨æ–¹æ¡ˆï¼ˆå†…å­˜æ˜ å°„æ¨¡å¼ï¼‰
  ******************************************************************************
  * @attention
  *
- * Ê¹ÓÃÇ°Ìá£º
+ * ä½¿ç”¨å‰æï¼š
  * ---------------------------------------------------------------
- * 1. ×Ö¿âÒÑÍ¨¹ýSTM32CubeProgrammerÔ¤ÉÕÂ¼µ½QSPI Flash
- * 2. QSPIÒÑÅäÖÃÎªÄÚ´æÓ³ÉäÄ£Ê½£¨ÓÉÍâ²¿QSPIÇý¶¯¸ºÔð£©
- * 3. ×Ö¿âÊý¾Ý¿ÉÍ¨¹ý W25Qxx_Mem_Addr (0x90000000) Ö±½Ó·ÃÎÊ
+ * 1. å­—åº“å·²é€šè¿‡STM32CubeProgrammeré¢„çƒ§å½•åˆ°QSPI Flash
+ * 2. QSPIå·²é…ç½®ä¸ºå†…å­˜æ˜ å°„æ¨¡å¼ï¼ˆç”±å¤–éƒ¨QSPIé©±åŠ¨è´Ÿè´£ï¼‰
+ * 3. å­—åº“æ•°æ®å¯é€šè¿‡ W25Qxx_Mem_Addr (0x90000000) ç›´æŽ¥è®¿é—®
  *
- * ×Ö¿âÉÕÂ¼µØÖ··ÖÅä:
- * ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ð©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ð©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
- * ©¦ ÎÄ¼þÃû           ©¦ ÉÕÂ¼µØÖ·      ©¦ ËµÃ÷             ©¦
- * ©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
- * ©¦ font_12x12_*.bin ©¦ 0x91D00000   ©¦ 12x12×Ö¿â        ©¦
- * ©¦ font_16x16_*.bin ©¦ 0x91D2BBE0   ©¦ 16x16×Ö¿â        ©¦
- * ©¦ font_20x20_*.bin ©¦ 0x91D66100   ©¦ 20x20×Ö¿â        ©¦
- * ©¦ font_24x24_*.bin ©¦ 0x91DD3680   ©¦ 24x24×Ö¿â        ©¦
- * ©¦ font_32x32_*.bin ©¦ 0x91E569E0   ©¦ 32x32×Ö¿â        ©¦
- * ©¦ gb2312_table.bin ©¦ 0x91F3FE00   ©¦ GB2312¶ÔÕÕ±í     ©¦
- * ©¦ utf8_table.bin   ©¦ 0x91F472D0   ©¦ UTF8  ¶ÔÕÕ±í     ©¦
- * ©¦ flag.bin         ©¦ 0x91F572F0   ©¦ ±êÖ¾Î»           ©¦
- * ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+ * å­—åº“çƒ§å½•åœ°å€åˆ†é…:
+ * â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+ * â”‚ æ–‡ä»¶å           â”‚ çƒ§å½•åœ°å€      â”‚ è¯´æ˜Ž             â”‚
+ * â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+ * â”‚ font_12x12_*.bin â”‚ 0x91D00000   â”‚ 12x12å­—åº“        â”‚
+ * â”‚ font_16x16_*.bin â”‚ 0x91D2BBE0   â”‚ 16x16å­—åº“        â”‚
+ * â”‚ font_20x20_*.bin â”‚ 0x91D66100   â”‚ 20x20å­—åº“        â”‚
+ * â”‚ font_24x24_*.bin â”‚ 0x91DD3680   â”‚ 24x24å­—åº“        â”‚
+ * â”‚ font_32x32_*.bin â”‚ 0x91E569E0   â”‚ 32x32å­—åº“        â”‚
+ * â”‚ gb2312_table.bin â”‚ 0x91F3FE00   â”‚ GB2312å¯¹ç…§è¡¨     â”‚
+ * â”‚ utf8_table.bin   â”‚ 0x91F472D0   â”‚ UTF8  å¯¹ç…§è¡¨     â”‚
+ * â”‚ flag.bin         â”‚ 0x91F572F0   â”‚ æ ‡å¿—ä½           â”‚
+ * â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
  */
 
 #ifndef FLASH_FONT_H
@@ -39,118 +39,120 @@ extern "C"
 #include <stdint.h>
 
 /*******************************************************************************
- *                          ÄÚ´æÓ³Éä»ùµØÖ·¶¨Òå
+ *                          å†…å­˜æ˜ å°„åŸºåœ°å€å®šä¹‰
  ******************************************************************************/
-#define W25Qxx_Mem_Addr 0x90000000 /*!< QSPIÄÚ´æÓ³ÉäÄ£Ê½»ùµØÖ· */
+#define W25Qxx_Mem_Addr 0x90000000 /*!< QSPIå†…å­˜æ˜ å°„æ¨¡å¼åŸºåœ°å€ */
 
 /*******************************************************************************
- *                          Flash×ÖÌå´æ´¢µØÖ··ÖÅä
+ *                          Flashå­—ä½“å­˜å‚¨åœ°å€åˆ†é…
  *******************************************************************************/
 /**
- * @brief QSPI Flash×Ö¿â´æ´¢ÇøÓò¶¨Òå(Ïà¶ÔÓÚFlashÆðÊ¼µØÖ·µÄÆ«ÒÆ)
+ * @brief QSPI Flashå­—åº“å­˜å‚¨åŒºåŸŸå®šä¹‰(ç›¸å¯¹äºŽFlashèµ·å§‹åœ°å€çš„åç§»)
  */
-#define FONT_12x12_ADDR 0x1D00000 /*!< 12x12×ÖÌåÇøÓòÆðÊ¼µØÖ·  */
-#define FONT_16x16_ADDR 0x1D2BBE0 /*!< 16x16×ÖÌåÇøÓòÆðÊ¼µØÖ·  */
-#define FONT_20x20_ADDR 0x1D66100 /*!< 20x20×ÖÌåÇøÓòÆðÊ¼µØÖ·  */
-#define FONT_24x24_ADDR 0x1DD3680 /*!< 24x24×ÖÌåÇøÓòÆðÊ¼µØÖ· */
-#define FONT_32x32_ADDR 0x1E569E0 /*!< 32x32×ÖÌåÇøÓòÆðÊ¼µØÖ· */
+#define FONT_12x12_ADDR 0x1D00000 /*!< 12x12å­—ä½“åŒºåŸŸèµ·å§‹åœ°å€  */
+#define FONT_16x16_ADDR 0x1D2BBE0 /*!< 16x16å­—ä½“åŒºåŸŸèµ·å§‹åœ°å€  */
+#define FONT_20x20_ADDR 0x1D66100 /*!< 20x20å­—ä½“åŒºåŸŸèµ·å§‹åœ°å€  */
+#define FONT_24x24_ADDR 0x1DD3680 /*!< 24x24å­—ä½“åŒºåŸŸèµ·å§‹åœ°å€ */
+#define FONT_32x32_ADDR 0x1E569E0 /*!< 32x32å­—ä½“åŒºåŸŸèµ·å§‹åœ°å€ */
 
-#define GB2312_TABLE_ADDR 0x1F3FE00 /*!< GB2312¶ÔÕÕ±íµØÖ· */
-#define UTF8_TABLE_ADDR 0x1F472D0 /*!< utf8¶ÔÕÕ±íµØÖ· */
-#define FONT_FLAG_ADDR 0x1F572F0    /*!< ×Ö¿â±êÖ¾´æ´¢µØÖ· */
+#define GB2312_TABLE_ADDR 0x1F3FE00 /*!< GB2312å¯¹ç…§è¡¨åœ°å€ */
+#define UTF8_TABLE_ADDR 0x1F472D0 /*!< utf8å¯¹ç…§è¡¨åœ°å€ */
+#define FONT_FLAG_ADDR 0x1F572F0    /*!< å­—åº“æ ‡å¿—å­˜å‚¨åœ°å€ */
 /*******************************************************************************
- *                          ×Ö¿â±êÖ¾½á¹¹¶¨Òå
+ *                          å­—åº“æ ‡å¿—ç»“æž„å®šä¹‰
  ******************************************************************************/
 /**
- * @brief  ×Ö¿âÐ´Èë±êÖ¾½á¹¹Ìå
- * @note   ´æ´¢ÔÚFlash¹Ì¶¨µØÖ·FONT_FLAG_ADDR,ÓÃÓÚ±ê¼Ç×Ö¿âÊÇ·ñÒÑÐ´Èë
+ * @brief  å­—åº“å†™å…¥æ ‡å¿—ç»“æž„ä½“
+ * @note   å­˜å‚¨åœ¨Flashå›ºå®šåœ°å€FONT_FLAG_ADDR,ç”¨äºŽæ ‡è®°å­—åº“æ˜¯å¦å·²å†™å…¥
  */
 typedef struct {
-  uint32_t magic; /*!< Ä§Êý 0x464C4147 ("FLAG") ÓÃÓÚÑéÖ¤Êý¾ÝÓÐÐ§ÐÔ */
-  uint8_t font_12_ok; /*!< 12x12×Ö¿âÐ´ÈëÍê³É±êÖ¾: 0=Î´Ð´Èë, 1=ÒÑÐ´Èë */
-  uint8_t font_16_ok; /*!< 16x16×Ö¿âÐ´ÈëÍê³É±êÖ¾: 0=Î´Ð´Èë, 1=ÒÑÐ´Èë */
-  uint8_t font_20_ok; /*!< 20x20×Ö¿âÐ´ÈëÍê³É±êÖ¾: 0=Î´Ð´Èë, 1=ÒÑÐ´Èë */
-  uint8_t font_24_ok; /*!< 24x24×Ö¿âÐ´ÈëÍê³É±êÖ¾: 0=Î´Ð´Èë, 1=ÒÑÐ´Èë */
-  uint8_t font_32_ok; /*!< 32x32×Ö¿âÐ´ÈëÍê³É±êÖ¾: 0=Î´Ð´Èë, 1=ÒÑÐ´Èë */
-  uint8_t reserved[3]; /*!< ±£Áô×Ö½Ú(4×Ö½Ú¶ÔÆë) */
+  uint32_t magic; /*!< é­”æ•° 0x464C4147 ("FLAG") ç”¨äºŽéªŒè¯æ•°æ®æœ‰æ•ˆæ€§ */
+  uint8_t font_12_ok; /*!< 12x12å­—åº“å†™å…¥å®Œæˆæ ‡å¿—: 0=æœªå†™å…¥, 1=å·²å†™å…¥ */
+  uint8_t font_16_ok; /*!< 16x16å­—åº“å†™å…¥å®Œæˆæ ‡å¿—: 0=æœªå†™å…¥, 1=å·²å†™å…¥ */
+  uint8_t font_20_ok; /*!< 20x20å­—åº“å†™å…¥å®Œæˆæ ‡å¿—: 0=æœªå†™å…¥, 1=å·²å†™å…¥ */
+  uint8_t font_24_ok; /*!< 24x24å­—åº“å†™å…¥å®Œæˆæ ‡å¿—: 0=æœªå†™å…¥, 1=å·²å†™å…¥ */
+  uint8_t font_32_ok; /*!< 32x32å­—åº“å†™å…¥å®Œæˆæ ‡å¿—: 0=æœªå†™å…¥, 1=å·²å†™å…¥ */
+  uint8_t reserved[3]; /*!< ä¿ç•™å­—èŠ‚(4å­—èŠ‚å¯¹é½) */
     } FontWriteFlag_t;
 
     /*******************************************************************************
-     *                          ¶ÔÕÕ±í½á¹¹¶¨Òå
+     *                          å¯¹ç…§è¡¨ç»“æž„å®šä¹‰
      ******************************************************************************/
 
     /**
-     * @brief  GB2312¶ÔÕÕ±íÊý¾ÝÏî(Ã¿Ìõ4×Ö½Ú)
-     * @note   ¸ñÊ½: uint16_t gbk_code + uint16_t index
+     * @brief  GB2312å¯¹ç…§è¡¨æ•°æ®é¡¹(æ¯æ¡4å­—èŠ‚)
+     * @note   æ ¼å¼: uint16_t gbk_code + uint16_t index
      */
     typedef struct
     {
-        uint16_t gbk_code; /*!< GBK±àÂë(2×Ö½Ú) */
-        uint16_t index;    /*!< ×Ö¿âË÷Òý(2×Ö½Ú) */
+        uint16_t gbk_code; /*!< GBKç¼–ç (2å­—èŠ‚) */
+        uint16_t index;    /*!< å­—åº“ç´¢å¼•(2å­—èŠ‚) */
     } GB2312_TableEntry_t;
 
     /**
-     * @brief  UTF8¶ÔÕÕ±íÊý¾ÝÏî(Ã¿Ìõ8×Ö½Ú)
-     * @note   ¸ñÊ½: uint8_t utf8_len + uint8_t utf8[4] + uint16_t index
+     * @brief  UTF8å¯¹ç…§è¡¨æ•°æ®é¡¹(æ¯æ¡8å­—èŠ‚)
+     * @note   æ ¼å¼: uint8_t utf8_len + uint8_t utf8[4] + uint16_t index
      */
-    typedef struct {
-      uint8_t utf8_len; /*!< UTF8×Ö½Ú³¤¶È(1-4) */
-      uint8_t utf8[4];  /*!< UTF8±àÂë(×î¶à4×Ö½Ú,²»×ã²¹0) */
-      uint16_t index;   /*!< ×Ö¿âË÷Òý(2×Ö½Ú) */
+    typedef struct __attribute__((packed)) {
+      uint8_t utf8_len; /*!< UTF8å­—èŠ‚é•¿åº¦(1-4) */
+      uint8_t utf8[4];  /*!< UTF8ç¼–ç (æœ€å¤š4å­—èŠ‚,ä¸è¶³è¡¥0) */
+      uint16_t index;   /*!< å­—åº“ç´¢å¼•(2å­—èŠ‚) */
+      uint8_t reserved; /*!< ä¿ç•™å­—èŠ‚ï¼Œå¿…é¡»å­˜åœ¨ä»¥åŒ¹é…ç”Ÿæˆè„šæœ¬çš„8å­—èŠ‚å¯¹é½ */
     } UTF8_TableEntry_t;
 
     /*******************************************************************************
-     *                          µ¼³öº¯ÊýÉùÃ÷
+     *                          å¯¼å‡ºå‡½æ•°å£°æ˜Ž
      ******************************************************************************/
 
     /**
-     * @brief  ³õÊ¼»¯Flash×Ö¿âÇý¶¯
-     * @note   Ç°Ìá£ºQSPIÒÑ¿ªÆôÄÚ´æÓ³ÉäÄ£Ê½£¬×Ö¿âÒÑÔ¤ÉÕÂ¼
-     * @retval 0-³É¹¦, <0-Ê§°Ü
+     * @brief  åˆå§‹åŒ–Flashå­—åº“é©±åŠ¨
+     * @note   å‰æï¼šQSPIå·²å¼€å¯å†…å­˜æ˜ å°„æ¨¡å¼ï¼Œå­—åº“å·²é¢„çƒ§å½•
+     * @retval 0-æˆåŠŸ, <0-å¤±è´¥
      */
     int8_t FlashFont_Init(void);
 
     /**
-     * @brief  »ñÈ¡Ö¸¶¨×ÖÌåÃ¿×Ö·ûÕ¼ÓÃµÄ×Ö½ÚÊý
-     * @param  font_size: ×ÖÌå´óÐ¡(12/16/20/24/32)
-     * @retval >=0: Ã¿×Ö·û×Ö½ÚÊý, <0: ÎÞÐ§×ÖÌå´óÐ¡
+     * @brief  èŽ·å–æŒ‡å®šå­—ä½“æ¯å­—ç¬¦å ç”¨çš„å­—èŠ‚æ•°
+     * @param  font_size: å­—ä½“å¤§å°(12/16/20/24/32)
+     * @retval >=0: æ¯å­—ç¬¦å­—èŠ‚æ•°, <0: æ— æ•ˆå­—ä½“å¤§å°
      */
     int16_t FlashFont_BytesPerChar(uint8_t font_size);
 
     /**
-     * @brief  ´ÓFlash²éÕÒºº×Ö¶ÔÓ¦µÄ×Ö¿âË÷Òý
-     * @param  text: ºº×Ö×Ö·û´®(GBK±àÂë£¬2×Ö½Ú)
-     * @retval ×Ö¿âË÷Òý(0-7463), Î´ÕÒµ½·µ»Ø-1
-     * @note   Ê¹ÓÃÏßÐÔ²éÕÒ£¬ÊÊºÏÉÙÁ¿²éÑ¯
+     * @brief  ä»ŽFlashæŸ¥æ‰¾æ±‰å­—å¯¹åº”çš„å­—åº“ç´¢å¼•
+     * @param  text: æ±‰å­—å­—ç¬¦ä¸²(GBKç¼–ç ï¼Œ2å­—èŠ‚)
+     * @retval å­—åº“ç´¢å¼•(0-7463), æœªæ‰¾åˆ°è¿”å›ž-1
+     * @note   ä½¿ç”¨çº¿æ€§æŸ¥æ‰¾ï¼Œé€‚åˆå°‘é‡æŸ¥è¯¢
      */
     int16_t GB2312_FindIndex_Flash(const char *text);
 
     /**
-     * @brief  ´ÓFlash²éÕÒºº×Ö²¢·µ»Ø×ÖÄ£Êý¾ÝÖ¸Õë
-     * @param  text: ºº×Ö×Ö·û´®(GBK±àÂë£¬2×Ö½Ú)
-     * @param  font_size: ×ÖÌå´óÐ¡(12/16/20/24/32)
-     * @retval ×ÖÄ£Êý¾ÝÖ¸Õë£¬²éÕÒÊ§°Ü·µ»ØNULL
+     * @brief  ä»ŽFlashæŸ¥æ‰¾æ±‰å­—å¹¶è¿”å›žå­—æ¨¡æ•°æ®æŒ‡é’ˆ
+     * @param  text: æ±‰å­—å­—ç¬¦ä¸²(GBKç¼–ç ï¼Œ2å­—èŠ‚)
+     * @param  font_size: å­—ä½“å¤§å°(12/16/20/24/32)
+     * @retval å­—æ¨¡æ•°æ®æŒ‡é’ˆï¼ŒæŸ¥æ‰¾å¤±è´¥è¿”å›žNULL
      */
     const uint8_t *GB2312_FindFont_Flash(const char *text, uint8_t font_size);
 
     /**
-     * @brief  ´ÓFlash²éÕÒUTF8×Ö·û¶ÔÓ¦µÄ×Ö¿âË÷Òý
-     * @param  utf8_text: UTF8×Ö·û×Ö·û´®(1-4×Ö½Ú)
-     * @param  utf8_len: UTF8×Ö·ûµÄ×Ö½Ú³¤¶È(1-4)
-     * @retval ×Ö¿âË÷Òý, Î´ÕÒµ½·µ»Ø-1
-     * @note   Ê¹ÓÃÏßÐÔ²éÕÒ£¬ÊÊºÏÉÙÁ¿²éÑ¯
+     * @brief  ä»ŽFlashæŸ¥æ‰¾UTF8å­—ç¬¦å¯¹åº”çš„å­—åº“ç´¢å¼•
+     * @param  utf8_text: UTF8å­—ç¬¦å­—ç¬¦ä¸²(1-4å­—èŠ‚)
+     * @param  utf8_len: UTF8å­—ç¬¦çš„å­—èŠ‚é•¿åº¦(1-4)
+     * @retval å­—åº“ç´¢å¼•, æœªæ‰¾åˆ°è¿”å›ž-1
+     * @note   ä½¿ç”¨çº¿æ€§æŸ¥æ‰¾ï¼Œé€‚åˆå°‘é‡æŸ¥è¯¢
      */
     int16_t UTF8_FindIndex_Flash(const uint8_t *utf8_text, uint8_t utf8_len);
 
     /**
-     * @brief  ´ÓFlash²éÕÒUTF8×Ö·û²¢·µ»Ø×ÖÄ£Êý¾ÝÖ¸Õë
-     * @param  utf8_text: UTF8×Ö·û×Ö·û´®(1-4×Ö½Ú)
-     * @param  utf8_len: UTF8×Ö·ûµÄ×Ö½Ú³¤¶È(1-4)
-     * @param  font_size: ×ÖÌå´óÐ¡(12/16/20/24/32)
-     * @retval ×ÖÄ£Êý¾ÝÖ¸Õë£¬²éÕÒÊ§°Ü·µ»ØNULL
+     * @brief  ä»ŽFlashæŸ¥æ‰¾UTF8å­—ç¬¦å¹¶è¿”å›žå­—æ¨¡æ•°æ®æŒ‡é’ˆ
+     * @param  utf8_text: UTF8å­—ç¬¦å­—ç¬¦ä¸²(1-4å­—èŠ‚)
+     * @param  font_size: å­—ä½“å¤§å°(12/16/20/24/32)
+     * @retval å­—æ¨¡æ•°æ®æŒ‡é’ˆï¼ŒæŸ¥æ‰¾å¤±è´¥è¿”å›žNULL
+     * @note   è‡ªåŠ¨è¯†åˆ«UTF-8å­—ç¬¦é•¿åº¦ï¼Œæ— éœ€æ‰‹åŠ¨æŒ‡å®š
      */
     const uint8_t *UTF8_FindFont_Flash(const uint8_t *utf8_text,
-                                       uint8_t utf8_len, uint8_t font_size);
+                                       uint8_t font_size);
+    
 #ifdef __cplusplus
 }
 #endif

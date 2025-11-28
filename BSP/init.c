@@ -1,26 +1,26 @@
 /**
  ******************************************************************************
  * @file    init.c
- * @author  ²Ë²Ëwhy£¨BÕ¾£º²Ë²Ëwhyy£©
- * @brief   ³õÊ¼»¯Ô´ÎÄ¼þ£¬ÊµÏÖÍâÉèÍ³Ò»³õÊ¼»¯ÓëÖ÷Ñ­»·ÈÎÎñµ÷¶È
+ * @author  èœèœwhyï¼ˆBç«™ï¼šèœèœwhyyï¼‰
+ * @brief   åˆå§‹åŒ–æºæ–‡ä»¶ï¼Œå®žçŽ°å¤–è®¾ç»Ÿä¸€åˆå§‹åŒ–ä¸Žä¸»å¾ªçŽ¯ä»»åŠ¡è°ƒåº¦
  ******************************************************************************
  * @attention
  *
- * ±¾ÎÄ¼þÊµÏÖ£º
- * - init_all(): ¸ù¾Ý init.h ÖÐµÄÊ¹ÄÜ¿ª¹Ø³õÊ¼»¯¸÷ÍâÉèÄ£¿é
- * - main_while(): ÖÜÆÚµ÷ÓÃ¸÷Ä£¿éµÄ·Ç×èÈûÈÎÎñ£¨Èç°´¼üÉ¨Ãè£©
+ * æœ¬æ–‡ä»¶å®žçŽ°ï¼š
+ * - init_all(): æ ¹æ® init.h ä¸­çš„ä½¿èƒ½å¼€å…³åˆå§‹åŒ–å„å¤–è®¾æ¨¡å—
+ * - main_while(): å‘¨æœŸè°ƒç”¨å„æ¨¡å—çš„éžé˜»å¡žä»»åŠ¡ï¼ˆå¦‚æŒ‰é”®æ‰«æï¼‰
  *
- * Ê¹ÓÃÊ¾Àý£º
+ * ä½¿ç”¨ç¤ºä¾‹ï¼š
  * int main(void) {
  *     HAL_Init();
  *     SystemClock_Config();
  *     MX_GPIO_Init();
  *
- *     init_all();  // ³õÊ¼»¯ËùÓÐÍâÉè
+ *     init_all();  // åˆå§‹åŒ–æ‰€æœ‰å¤–è®¾
  *
  *     while (1) {
- *         main_while();  // ÖÜÆÚÈÎÎñ
- *         HAL_Delay(10); // ½¨Òé10msµ÷ÓÃÒ»´Î
+ *         main_while();  // å‘¨æœŸä»»åŠ¡
+ *         HAL_Delay(10); // å»ºè®®10msè°ƒç”¨ä¸€æ¬¡
  *     }
  * }
  *
@@ -32,48 +32,48 @@
 #include "SPI/lcd_spi.h"
 
 /*******************************************************************************
- *                              ³õÊ¼»¯º¯Êý
+ *                              åˆå§‹åŒ–å‡½æ•°
  ******************************************************************************/
 
 /**
- * @brief  ³õÊ¼»¯ËùÓÐÆôÓÃµÄÍâÉè
- * @note   ¸ù¾Ý init.h ÖÐµÄºê¶¨Òå£¨LED_ENABLE / KEY_ENABLE£©ÓÐÌõ¼þ±àÒë
- * @note   ³õÊ¼»¯Ë³Ðò£ºÏÈµ×²ãÇý¶¯£¬ÔÙÉÏ²ã¹¦ÄÜÄ£¿é
+ * @brief  åˆå§‹åŒ–æ‰€æœ‰å¯ç”¨çš„å¤–è®¾
+ * @note   æ ¹æ® init.h ä¸­çš„å®å®šä¹‰ï¼ˆLED_ENABLE / KEY_ENABLEï¼‰æœ‰æ¡ä»¶ç¼–è¯‘
+ * @note   åˆå§‹åŒ–é¡ºåºï¼šå…ˆåº•å±‚é©±åŠ¨ï¼Œå†ä¸Šå±‚åŠŸèƒ½æ¨¡å—
  * @retval None
  */
 void init_all(void)
 {
     /*******************************************************************************
-     *                              ÍâÉè³õÊ¼»¯²¿·Ö
+     *                              å¤–è®¾åˆå§‹åŒ–éƒ¨åˆ†
      ******************************************************************************/
 
 #ifdef LED_ENABLE
-    LED_Init(); /* ³õÊ¼»¯LEDÇý¶¯£¬¹Ø±ÕËùÓÐLED */
+    LED_Init(); /* åˆå§‹åŒ–LEDé©±åŠ¨ï¼Œå…³é—­æ‰€æœ‰LED */
 #endif          /* LED_ENABLE */
 
 #ifdef KEY_ENABLE
-    KEY_Init(); /* ³õÊ¼»¯°´¼üÇý¶¯£¬¶ÁÈ¡³õÊ¼µçÆ½ */
+    KEY_Init(); /* åˆå§‹åŒ–æŒ‰é”®é©±åŠ¨ï¼Œè¯»å–åˆå§‹ç”µå¹³ */
 #endif          /* KEY_ENABLE */
 
 #ifdef BUZZER_ENABLE
-    BUZZER_Init(); /* ³õÊ¼»¯·äÃùÆ÷Çý¶¯£¬¹Ø±ÕËùÓÐ·äÃùÆ÷ */
+    BUZZER_Init(); /* åˆå§‹åŒ–èœ‚é¸£å™¨é©±åŠ¨ï¼Œå…³é—­æ‰€æœ‰èœ‚é¸£å™¨ */
 #endif             /* BUZZER_ENABLE */
 
 #ifdef DIGITAL_SENSOR_ENABLE
-    DIGITAL_SENSOR_Init(); /* ³õÊ¼»¯Êý×Ö´«¸ÐÆ÷Çý¶¯£¬¶ÁÈ¡³õÊ¼µçÆ½ */
+    DIGITAL_SENSOR_Init(); /* åˆå§‹åŒ–æ•°å­—ä¼ æ„Ÿå™¨é©±åŠ¨ï¼Œè¯»å–åˆå§‹ç”µå¹³ */
 #endif                     /* DIGITAL_SENSOR_ENABLE */
 
 #ifdef UI_ENCODER_ENABLE
-    UI_ENCODER_Init(); /* ³õÊ¼»¯UI±àÂëÆ÷£¨ÂÖÑ¯ÐÍ£© */
+    UI_ENCODER_Init(); /* åˆå§‹åŒ–UIç¼–ç å™¨ï¼ˆè½®è¯¢åž‹ï¼‰ */
 #endif                 /* UI_ENCODER_ENABLE */
 
 #ifdef LCD_SPI_ENABLE
-    SPI_LCD_Init(); /* ³õÊ¼»¯LCD SPIÇý¶¯ */
+    SPI_LCD_Init(); /* åˆå§‹åŒ–LCD SPIé©±åŠ¨ */
 #endif              /* LCD_SPI_ENABLE */
 
 
 #ifdef QSPI_FLASH_ENABLE
-    QSPI_W25Qxx_Init(); /* ³õÊ¼»¯QSPI FlashÇý¶¯ */
+    QSPI_W25Qxx_Init(); /* åˆå§‹åŒ–QSPI Flashé©±åŠ¨ */
     QSPI_W25Qxx_MemoryMappedMode();
 #endif
 
@@ -105,24 +105,24 @@ void init_all(void)
 #endif
 
 #ifdef LCD_RGB_ENABLE
-    RGB_LCD_Init(); /* ³õÊ¼»¯LCD RGBÇý¶¯ */
+    RGB_LCD_Init(); /* åˆå§‹åŒ–LCD RGBé©±åŠ¨ */
 #endif              /* LCD_RGB_ENABLE */
 
 #ifdef LCD_RGB_TOUCH_ENABLE
-    Touch_Init(); /* ³õÊ¼»¯LCD´¥ÃþÇý¶¯ */
+    Touch_Init(); /* åˆå§‹åŒ–LCDè§¦æ‘¸é©±åŠ¨ */
 #endif    
     /*******************************************************************************
-     *                              ÓÃ»§×Ô¶¨Òå³õÊ¼»¯²¿·Ö
+     *                              ç”¨æˆ·è‡ªå®šä¹‰åˆå§‹åŒ–éƒ¨åˆ†
      ******************************************************************************/
-    LCD_DisplayText(0, 0, "ÕâÊÇÒ»¸ö²âÊÔ£¬¹þ»ùÃ×ÄÏ±±ÂÌ¶¹£¬stm32~");
+    LCD_DisplayText(0, 0, "è¿™æ˜¯ä¸€ä¸ªæµ‹è¯•ï¼Œå“ˆåŸºç±³å—åŒ—ç»¿è±†ï¼Œstm32~");
     LCD_SetTextFont(12);
-    LCD_DisplayText(0, 48, "ÕâÊÇÒ»¸ö²âÊÔ£¬¹þ»ùÃ×ÄÏ±±ÂÌ¶¹£¬stm32~");
-    // RGB_LCD_SetColor(0xff333333);     /* ÉèÖÃ»­±ÊÉ«£¬Ê¹ÓÃ×Ô¶¨ÒåÑÕÉ« */
-    // RGB_LCD_SetBackColor(0xffB9EDF8); /* ÉèÖÃ±³¾°É«£¬Ê¹ÓÃ×Ô¶¨ÒåÑÕÉ« */
-    // RGB_LCD_Clear();                  /* ÇåÆÁ£¬Ë¢±³¾°É« */
+    LCD_DisplayText(0, 48, "è¿™æ˜¯ä¸€ä¸ªæµ‹è¯•ï¼Œå“ˆåŸºç±³å—åŒ—ç»¿è±†ï¼Œstm32~");
+    // RGB_LCD_SetColor(0xff333333);     /* è®¾ç½®ç”»ç¬”è‰²ï¼Œä½¿ç”¨è‡ªå®šä¹‰é¢œè‰² */
+    // RGB_LCD_SetBackColor(0xffB9EDF8); /* è®¾ç½®èƒŒæ™¯è‰²ï¼Œä½¿ç”¨è‡ªå®šä¹‰é¢œè‰² */
+    // RGB_LCD_Clear();                  /* æ¸…å±ï¼Œåˆ·èƒŒæ™¯è‰² */
 
     // RGB_LCD_SetTextFont(32);
-    // RGB_LCD_DisplayText(42, 20, "µçÈÝ´¥Ãþ²âÊÔ");
+    // RGB_LCD_DisplayText(42, 20, "ç”µå®¹è§¦æ‘¸æµ‹è¯•");
 
     // RGB_LCD_DisplayString(44, 170, "X1:       Y1:");
     // RGB_LCD_DisplayString(44, 220, "X2:       Y2:");
@@ -130,22 +130,22 @@ void init_all(void)
     // RGB_LCD_DisplayString(44, 320, "X4:       Y4:");
     // RGB_LCD_DisplayString(44, 370, "X5:       Y5:");
 
-    // RGB_LCD_SetColor(RGB_LCD_RED); /* ÉèÖÃ»­±ÊÑÕÉ«ÎªºìÉ« */
+    // RGB_LCD_SetColor(RGB_LCD_RED); /* è®¾ç½®ç”»ç¬”é¢œè‰²ä¸ºçº¢è‰² */
 }
 
 /*******************************************************************************
- *                              Ö÷Ñ­»·ÖÜÆÚÈÎÎñ
+ *                              ä¸»å¾ªçŽ¯å‘¨æœŸä»»åŠ¡
  ******************************************************************************/
 
 /**
- * @brief  Ö÷Ñ­»·ÖÜÆÚÈÎÎñ
- * @note   ÔÚÖ÷º¯Êý while(1) ÖÐµ÷ÓÃ£¬Çý¶¯·Ç×èÈûÈÎÎñ
- * @note   ½¨Òéµ÷ÓÃ¼ä¸ô: 5~20ms
+ * @brief  ä¸»å¾ªçŽ¯å‘¨æœŸä»»åŠ¡
+ * @note   åœ¨ä¸»å‡½æ•° while(1) ä¸­è°ƒç”¨ï¼Œé©±åŠ¨éžé˜»å¡žä»»åŠ¡
+ * @note   å»ºè®®è°ƒç”¨é—´éš”: 5~20ms
  *
- * @par    µ÷ÓÃµÄÈÎÎñÁÐ±í£º
- *         - KEY_Task(): °´¼üÉ¨Ãè£¨Ïû¶¶¡¢ÊÂ¼þ¼ì²â£©
- *         - DIGITAL_SENSOR_Task(): Êý×Ö´«¸ÐÆ÷É¨Ãè
- *         - UI_ENCODER_Poll(): UI±àÂëÆ÷ÂÖÑ¯£¨Èç¹ûÆôÓÃ£©
+ * @par    è°ƒç”¨çš„ä»»åŠ¡åˆ—è¡¨ï¼š
+ *         - KEY_Task(): æŒ‰é”®æ‰«æï¼ˆæ¶ˆæŠ–ã€äº‹ä»¶æ£€æµ‹ï¼‰
+ *         - DIGITAL_SENSOR_Task(): æ•°å­—ä¼ æ„Ÿå™¨æ‰«æ
+ *         - UI_ENCODER_Poll(): UIç¼–ç å™¨è½®è¯¢ï¼ˆå¦‚æžœå¯ç”¨ï¼‰
  *
  * @retval None
  */
