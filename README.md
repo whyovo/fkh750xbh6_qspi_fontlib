@@ -1,6 +1,15 @@
 # STM32H7 QSPI Flash 字库驱动项目
+## 11.28更新：
+简化字库函数调用逻辑，添加utf8代码逻辑。
+
+使用utf8的时候，keil中，Options → C/C++ → Misc Controls 里加
+
+--no_multibyte_chars
+
+![](https://cdn.nlark.com/yuque/0/2025/png/48302010/1764335369454-605ac7be-adb8-4310-b516-93226b65c143.png)
+
 ## 概述
-使用反客科技的stm32h750xbh6，借住外扩的qspi flash，实现**约7400个汉字、5种大小（12,16,20,24,32）的宋体字符显示**。原理图见Doc文档。
+使用反客科技的stm32h750xbh6，借住外扩的qspi flash，实现**约7400个汉字、5种大小（12,16,20,24,32）、GB2312+utf8的宋体字符显示**。原理图见Doc文档。
 
 
 
@@ -43,7 +52,8 @@ LCD_SetTextFont(12);
 #define FONT_32x32_ADDR 0x1E569E0 /*!< 32x32字体区域起始地址 */
 
 #define GB2312_TABLE_ADDR 0x1F3FE00 /*!< GB2312对照表地址 */
-#define FONT_FLAG_ADDR 0x1F472D0    /*!< 字库标志存储地址 */
+#define UTF8_TABLE_ADDR 0x1F472D0 /*!< utf8对照表地址 */
+#define FONT_FLAG_ADDR 0x1F572F0    /*!< 字库标志存储地址 */
 ```
 
 | 文件名           | 烧录地址   | 说明          |
@@ -54,7 +64,8 @@ LCD_SetTextFont(12);
 | font_24x24_*.bin | 0x91DD3680 | 24×24 字库    |
 | font_32x32_*.bin | 0x91E569E0 | 32×32 字库    |
 | gb2312_table.bin | 0x91F3FE00 | GB2312 对照表 |
-| flag.bin         | 0x91F472D0 | 标志位验证    |
+| utf8_table.bin   | 0x91F472D0 | UTF8对照表    |
+| flag.bin         | 0x91F572F0 | 标志位验证    |
 
 
 ---
@@ -104,4 +115,37 @@ fkh750xbh6_qspi_fontlib/
 能读取到数据就ok
 
 ![](https://cdn.nlark.com/yuque/0/2025/png/48302010/1764259480590-9db529c4-0732-4035-adbf-01dd28183ba3.png)
+
+
+
+## 字库代码移植方法
+确保烧录好字库
+
+在flash_font.h中，把#include "init.h"全局替换为你自己的单片机头文件，比如#include "stm32h7xx_hal.h"
+
+![](https://cdn.nlark.com/yuque/0/2025/png/48302010/1764335617296-2481ef0f-aaf9-4c8b-8959-63eed9bf6fcc.png)
+
+调用api即可，调用方式非常简单，比如GB2312_FindFont_Flash("你",16)，会自动返回这个汉字的16x16大小在flash中的起始地址。
+
+```cpp
+/**
+     * @brief  从Flash查找汉字并返回字模数据指针
+     * @param  text: 汉字字符串(GBK编码，2字节)
+     * @param  font_size: 字体大小(12/16/20/24/32)
+     * @retval 字模数据指针，查找失败返回NULL
+     */
+    const uint8_t *GB2312_FindFont_Flash(const char *text, uint8_t font_size);
+```
+
+```cpp
+/**
+     * @brief  从Flash查找UTF8字符并返回字模数据指针
+     * @param  utf8_text: UTF8字符字符串(1-4字节)
+     * @param  font_size: 字体大小(12/16/20/24/32)
+     * @retval 字模数据指针，查找失败返回NULL
+     * @note   自动识别UTF-8字符长度，无需手动指定
+     */
+    const uint8_t *UTF8_FindFont_Flash(const uint8_t *utf8_text,
+                                       uint8_t font_size);
+```
 
