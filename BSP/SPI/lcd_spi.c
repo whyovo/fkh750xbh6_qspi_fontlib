@@ -660,60 +660,10 @@ void LCD_DisplayChinese(uint16_t x, uint16_t y, char *pText)
 #ifdef USE_FLASH_FONT
 	uint8_t font_size = LCD_GetChineseFontSize();
 
-	// 提取GBK编码的单个汉字（2字节）
-	char single_char[3] = {0};
-	single_char[0] = pText[0];
-	single_char[1] = pText[1];
-	single_char[2] = '\0';
-
-	// 使用查找表获取字库索引
-	int16_t index = GB2312_FindIndex_Flash(single_char);
-
-	if (index < 0)
-	{
-		// 查找失败，字符不在字库中
-		return;
-	}
-
-	// 直接计算字模在Flash中的地址
-	uint32_t base_addr = 0x90000000; // QSPI内存映射起始地址
-	uint32_t font_offset = 0;
-	uint16_t bytes_per_char = 0;
-
-	// 根据字体大小确定偏移和字节数
-	switch (font_size)
-	{
-	case 12:
-		font_offset = FONT_12x12_ADDR;
-		bytes_per_char = 24;
-		break;
-	case 16:
-		font_offset = FONT_16x16_ADDR;
-		bytes_per_char = 32;
-		break;
-	case 20:
-		font_offset = FONT_20x20_ADDR;
-		bytes_per_char = 60;
-		break;
-	case 24:
-		font_offset = FONT_24x24_ADDR;
-		bytes_per_char = 72;
-		break;
-	case 32:
-		font_offset = FONT_32x32_ADDR;
-		bytes_per_char = 128;
-		break;
-	default:
-		return;
-	}
-
-	// 跳过18字节的FontHeader_GB2312_t头部
-	uint32_t header_size = 18;
-
-	// 使用查找表获得的索引计算最终地址
-	const uint8_t *pFontData = (const uint8_t *)(base_addr + font_offset + header_size + index * bytes_per_char);
-
-	// 渲染到屏幕
+	// // 使用查找表获得的索引计算最终地址
+	// const uint8_t *pFontData = (const uint8_t *)(base_addr + font_offset + header_size + index * bytes_per_char);
+        const uint8_t *pFontData = GB2312_FindFont_Flash(pText, font_size);
+        // 渲染到屏幕
 	DrawFont_Bitmap(x, y, font_size, pFontData);
 #else
 	uint16_t i = 0, index = 0, counter = 0; // 计数变量

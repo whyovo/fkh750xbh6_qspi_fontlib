@@ -4,23 +4,6 @@
  * @author  菜菜why（B站：菜菜whyy）
  * @brief   Flash字库驱动实现文件（内存映射模式）
  ******************************************************************************
- * @attention
- *
- * 本文件实现：
- * - 字库数据访问（纯内存映射模式）
- * - GB2312字模数据访问
- * - 字库完整性校验
- *
- * 使用前提：
- * - 字库已通过STM32CubeProgrammer预烧录到QSPI Flash
- * - QSPI已配置为内存映射模式（由外部模块负责）
- * - 字库数据可通过 W25Qxx_Mem_Addr 直接访问
- *
- * 性能说明：
- * - 读取速度: >50MB/s (仅受QSPI时钟和Cache影响)
- * - 零拷贝访问，无需额外缓冲区
- *
- ******************************************************************************
  */
 
 #include "flash_font.h"
@@ -110,25 +93,26 @@ int8_t FlashFont_Init(void) {
 }
 
 /**
- * @brief  验证指定字库是否已烧录
+ * @brief  获取指定字体每字符占用的字节数
  * @param  font_size: 字体大小(12/16/20/24/32)
- * @retval 1-已烧录, 0-未烧录
+ * @retval >=0: 每字符字节数, <0: 无效字体大小
  */
-int8_t FlashFont_IsValid(uint8_t font_size) {
-  uint32_t base_addr = GetFontBaseAddr(font_size);
-  const FontHeader_GB2312_t *header;
-
-  if (base_addr == 0) {
-    return 0;
+int16_t FlashFont_BytesPerChar(uint8_t font_size) {
+  switch (font_size) {
+  case 12:
+    return 24;
+  case 16:
+    return 32;
+  case 20:
+    return 60;
+  case 24:
+    return 72;
+  case 32:
+    return 128;
+  default:
+    return -1;
   }
-
-  // 通过内存映射读取字库头信息
-  header = (const FontHeader_GB2312_t *)(W25Qxx_Mem_Addr + base_addr);
-
-  // 验证魔数
-  return (header->magic == FONT_MAGIC) ? 1 : 0;
 }
-
 /*******************************************************************************
  *                          GB2312对照表Flash访问实现
  ******************************************************************************/
@@ -170,6 +154,29 @@ int16_t GB2312_FindIndex_Flash(const char *text) {
   }
 
   return -1; // 未找到
+}
+
+/**
+ * @brief  从Flash查找汉字并返回字模数据指针
+ * @param  text: 汉字字符串(GBK编码，2字节)
+ * @param  font_size: 字体大小(12/16/20/24/32)
+ * @retval 字模数据指针，查找失败返回NULL
+ */
+const uint8_t *GB2312_FindFont_Flash(const char *text, uint8_t font_size) {
+  int16_t index = GB2312_FindIndex_Flash(text);
+  if (index < 0) {
+    return NULL;
+  }
+
+  uint32_t font_offset = GetFontBaseAddr(font_size);
+  uint16_t bytes_per_char = FlashFont_BytesPerChar(font_size);
+
+  if (font_offset == 0) {
+    return NULL;
+  }
+
+  return (const uint8_t *)(W25Qxx_Mem_Addr + font_offset + 18 +
+                           index * bytes_per_char);
 }
 
 #endif // FLASH_FONT_ENABLE
