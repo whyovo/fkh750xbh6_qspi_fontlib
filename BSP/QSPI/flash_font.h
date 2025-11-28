@@ -76,18 +76,8 @@ typedef struct {
     } FontWriteFlag_t;
 
     /*******************************************************************************
-     *                          GB2312对照表结构定义
+     *                          对照表结构定义
      ******************************************************************************/
-    /**
-     * @brief  GB2312对照表头信息结构体
-     * @note   存储在Flash中，用于快速查找汉字对应的字库索引
-     */
-    typedef struct
-    {
-        uint32_t magic;       /*!< 魔数 0x54424C47 ("TBLG") 用于验证数据有效性 */
-        uint32_t char_count;  /*!< 字符总数 (7464个) */
-        uint32_t data_offset; /*!< 数据区起始偏移(相对表头=12) */
-    } GB2312_TableHeader_t;
 
     /**
      * @brief  GB2312对照表数据项(每条4字节)
@@ -98,6 +88,16 @@ typedef struct {
         uint16_t gbk_code; /*!< GBK编码(2字节) */
         uint16_t index;    /*!< 字库索引(2字节) */
     } GB2312_TableEntry_t;
+
+    /**
+     * @brief  UTF8对照表数据项(每条8字节)
+     * @note   格式: uint8_t utf8_len + uint8_t utf8[4] + uint16_t index
+     */
+    typedef struct {
+      uint8_t utf8_len; /*!< UTF8字节长度(1-4) */
+      uint8_t utf8[4];  /*!< UTF8编码(最多4字节,不足补0) */
+      uint16_t index;   /*!< 字库索引(2字节) */
+    } UTF8_TableEntry_t;
 
     /*******************************************************************************
      *                          导出函数声明
@@ -132,6 +132,25 @@ typedef struct {
      * @retval 字模数据指针，查找失败返回NULL
      */
     const uint8_t *GB2312_FindFont_Flash(const char *text, uint8_t font_size);
+
+    /**
+     * @brief  从Flash查找UTF8字符对应的字库索引
+     * @param  utf8_text: UTF8字符字符串(1-4字节)
+     * @param  utf8_len: UTF8字符的字节长度(1-4)
+     * @retval 字库索引, 未找到返回-1
+     * @note   使用线性查找，适合少量查询
+     */
+    int16_t UTF8_FindIndex_Flash(const uint8_t *utf8_text, uint8_t utf8_len);
+
+    /**
+     * @brief  从Flash查找UTF8字符并返回字模数据指针
+     * @param  utf8_text: UTF8字符字符串(1-4字节)
+     * @param  utf8_len: UTF8字符的字节长度(1-4)
+     * @param  font_size: 字体大小(12/16/20/24/32)
+     * @retval 字模数据指针，查找失败返回NULL
+     */
+    const uint8_t *UTF8_FindFont_Flash(const uint8_t *utf8_text,
+                                       uint8_t utf8_len, uint8_t font_size);
 #ifdef __cplusplus
 }
 #endif

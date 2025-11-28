@@ -23,7 +23,6 @@
  ******************************************************************************/
 static uint32_t GetFontBaseAddr(uint8_t font_size);
 
-static GB2312_TableHeader_t g_table_header; /*!< 对照表头信息缓存 */
 static uint8_t g_font_initialized = 0;      /*!< 初始化标志 */
 
 /*******************************************************************************
@@ -63,8 +62,6 @@ static uint32_t GetFontBaseAddr(uint8_t font_size) {
  */
 int8_t FlashFont_Init(void) {
   const FontWriteFlag_t *flag;
-  const GB2312_TableHeader_t *table_header;
-
   // 通过内存映射读取标志位
   flag = (const FontWriteFlag_t *)(W25Qxx_Mem_Addr + FONT_FLAG_ADDR);
 
@@ -74,19 +71,6 @@ int8_t FlashFont_Init(void) {
     return -1;
   }
 
-  // 通过内存映射读取GB2312对照表头部
-  table_header =
-      (const GB2312_TableHeader_t *)(W25Qxx_Mem_Addr + GB2312_TABLE_ADDR);
-
-  // 验证对照表魔数
-  if (table_header->magic != 0x54424C47) // "TBLG"
-  {
-    DEBUG_ERROR("GB2312对照表标志无效，对照表可能未烧录");
-    return -2;
-  }
-
-  // 缓存对照表头信息
-  memcpy(&g_table_header, table_header, sizeof(GB2312_TableHeader_t));
   g_font_initialized = 1;
 
   return FLASHFONT_OK;
@@ -139,11 +123,11 @@ int16_t GB2312_FindIndex_Flash(const char *text) {
 
   // 计算数据区起始地址(内存映射)
   pData = (const uint8_t *)(W25Qxx_Mem_Addr + GB2312_TABLE_ADDR +
-                            g_table_header.data_offset);
+                            12);
   pEntry = (const GB2312_TableEntry_t *)pData;
 
   // 线性查找
-  for (uint32_t i = 0; i < g_table_header.char_count; i++) {
+  for (uint32_t i = 0; i < 7464; i++) {
     if (pEntry[i].gbk_code == 0xFFFF) {
       break; // 遇到特殊标记，提前结束
     }
@@ -179,4 +163,77 @@ const uint8_t *GB2312_FindFont_Flash(const char *text, uint8_t font_size) {
                            index * bytes_per_char);
 }
 
+/*******************************************************************************
+ *                          utf8对照表Flash访问实现
+ ******************************************************************************/
+/**
+ * @brief  从Flash查找UTF8字符对应的字库索引(线性查找)
+ * @param  utf8_text: UTF8字符字符串(1-4字节)
+ * @param  utf8_len: UTF8字符的字节长度(1-4)
+ * @retval 字库索引, 未找到返回-1
+ */
+int16_t UTF8_FindIndex_Flash(const uint8_t *utf8_text, uint8_t utf8_len) {
+  const uint8_t *pData;
+  const UTF8_TableEntry_t *pEntry;
+
+  if (!g_font_initialized) {
+    DEBUG_ERROR("UTF8_FindIndex_Flash: 字库未初始化");
+    return -1;
+  }
+
+  if (utf8_len < 1 || utf8_len > 4 || utf8_text == NULL) {
+    DEBUG_ERROR("UTF8_FindIndex_Flash: 无效的UTF8参数");
+    return -1;
+  }
+
+  // 计算数据区起始地址(内存映射)
+  pData = (const uint8_t *)(W25Qxx_Mem_Addr + UTF8_TABLE_ADDR +
+                            12);
+  pEntry = (const UTF8_TableEntry_t *)pData;
+
+  // 线性查找
+  for (uint32_t i = 0; i < 7464; i++) {
+    // 检查UTF8长度是否匹配
+    if (pEntry[i].utf8_len == utf8_len) {
+      // 比较UTF8编码
+      uint8_t match = 1;
+      for (uint8_t j = 0; j < utf8_len; j++) {
+        if (pEntry[i].utf8[j] != utf8_text[j]) {
+          match = 0;
+          break;
+        }
+      }
+      if (match) {
+        return pEntry[i].index; // 找到
+      }
+    }
+  }
+
+  return -1; // 未找到
+}
+
+/**
+ * @brief  从Flash查找UTF8字符并返回字模数据指针
+ * @param  utf8_text: UTF8字符字符串(1-4字节)
+ * @param  utf8_len: UTF8字符的字节长度(1-4)
+ * @param  font_size: 字体大小(12/16/20/24/32)
+ * @retval 字模数据指针，查找失败返回NULL
+ */
+const uint8_t *UTF8_FindFont_Flash(const uint8_t *utf8_text, uint8_t utf8_len,
+                                   uint8_t font_size) {
+  int16_t index = UTF8_FindIndex_Flash(utf8_text, utf8_len);
+  if (index < 0) {
+    return NULL;
+  }
+
+  uint32_t font_offset = GetFontBaseAddr(font_size);
+  uint16_t bytes_per_char = FlashFont_BytesPerChar(font_size);
+
+  if (font_offset == 0) {
+    return NULL;
+  }
+
+  return (const uint8_t *)(W25Qxx_Mem_Addr + font_offset + 18 +
+                           index * bytes_per_char);
+}
 #endif // FLASH_FONT_ENABLE
