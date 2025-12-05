@@ -73,7 +73,7 @@ int8_t QSPI_W25Qxx_Init(void) {
   if (Device_ID == W25Qxx_FLASH_ID) {
     return QSPI_W25Qxx_OK;
   } else {
-    DEBUG_ERROR("QSPI Flash ID匹配失败");
+    DEBUG_ERROR("QSPI Flash ID error");
     return W25Qxx_ERROR_INIT;
   }
 }

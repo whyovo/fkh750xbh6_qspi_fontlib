@@ -1,15 +1,7 @@
 # STM32H7 QSPI Flash 字库驱动项目
-## 11.28更新：
-简化字库函数调用逻辑，添加utf8代码逻辑。
-
-使用utf8的时候，keil中，Options → C/C++ → Misc Controls 里加
-
---no_multibyte_chars
-
-![](https://cdn.nlark.com/yuque/0/2025/png/48302010/1764335369454-605ac7be-adb8-4310-b516-93226b65c143.png)
-
+## 
 ## 概述
-使用反客科技的stm32h750xbh6，借住外扩的qspi flash，实现**约7400个汉字、5种大小（12,16,20,24,32）、GB2312+utf8的宋体字符显示**。原理图见Doc文档。
+使用反客科技的stm32h750xbh6，借住外扩的qspi flash，实现**约7400个汉字、5种大小（12,16,20,24,32）、GB2312+utf8的宋体汉字以及英文数字的显示**。原理图见Doc文档。
 
 
 
@@ -35,38 +27,30 @@ LCD_SetTextFont(12);
 
 
 
-由于我后续移植lvgl、usb等程序，内部flash不够，有代码要放在qspi flash里面，于是我选择把字库放在了32mb外部flash的**最后3mb**。各个文件下载地址如下：
+由于我后续移植lvgl、usb等程序，内部flash不够，有代码要放在qspi flash里面，于是我选择把字库放在了32mb外部flash的**最后3mb**。文件下载地址如下：
 
 
 
-如果需要修改位置，直接修改flash_font.h的定义就行
+如果需要修改位置，直接修改flash_font.h的BASE_ADDR定义就行了
 
 ```cpp
 /**
  * @brief QSPI Flash字库存储区域定义(相对于Flash起始地址的偏移)
  */
-#define FONT_12x12_ADDR 0x1D00000 /*!< 12x12字体区域起始地址  */
-#define FONT_16x16_ADDR 0x1D2BBE0 /*!< 16x16字体区域起始地址  */
-#define FONT_20x20_ADDR 0x1D66100 /*!< 20x20字体区域起始地址  */
-#define FONT_24x24_ADDR 0x1DD3680 /*!< 24x24字体区域起始地址 */
-#define FONT_32x32_ADDR 0x1E569E0 /*!< 32x32字体区域起始地址 */
+#define BASE_ADDR 0x1D00000
+#define FONT_12x12_ADDR BASE_ADDR + 0x0 /*!< 12x12字体区域起始地址  */
+#define FONT_16x16_ADDR BASE_ADDR + 0x2BBE0 /*!< 16x16字体区域起始地址  */
+#define FONT_20x20_ADDR BASE_ADDR + 0x66100 /*!< 20x20字体区域起始地址  */
+#define FONT_24x24_ADDR BASE_ADDR + 0xD3680 /*!< 24x24字体区域起始地址 */
+#define FONT_32x32_ADDR BASE_ADDR + 0x1569E0 /*!< 32x32字体区域起始地址 */
 
-#define GB2312_TABLE_ADDR 0x1F3FE00 /*!< GB2312对照表地址 */
-#define UTF8_TABLE_ADDR 0x1F472D0 /*!< utf8对照表地址 */
-#define FONT_FLAG_ADDR 0x1F572F0    /*!< 字库标志存储地址 */
+#define GB2312_TABLE_ADDR BASE_ADDR + 0x23FE00 /*!< GB2312对照表地址 */
+#define UTF8_TABLE_ADDR BASE_ADDR + 0x2472D0   /*!< utf8对照表地址 */
+#define FONT_FLAG_ADDR BASE_ADDR + 0x2572F0    /*!< 字库标志存储地址 */
+#define ASCII_FONTS_ADDR BASE_ADDR + 0x267310  /*!< ASCII字库地址 */
 ```
 
-| 文件名           | 烧录地址   | 说明          |
-| ---------------- | ---------- | ------------- |
-| font_12x12_*.bin | 0x91D00000 | 12×12 字库    |
-| font_16x16_*.bin | 0x91D2BBE0 | 16×16 字库    |
-| font_20x20_*.bin | 0x91D66100 | 20×20 字库    |
-| font_24x24_*.bin | 0x91DD3680 | 24×24 字库    |
-| font_32x32_*.bin | 0x91E569E0 | 32×32 字库    |
-| gb2312_table.bin | 0x91F3FE00 | GB2312 对照表 |
-| utf8_table.bin   | 0x91F472D0 | UTF8对照表    |
-| flag.bin         | 0x91F572F0 | 标志位验证    |
-
+ 只需要把merged_fonts.bin 烧录到0x91D00000里面就可以了。
 
 ---
 
@@ -148,4 +132,19 @@ fkh750xbh6_qspi_fontlib/
     const uint8_t *UTF8_FindFont_Flash(const uint8_t *utf8_text,
                                        uint8_t font_size);
 ```
+
+## 更新记录
+### 11.28更新：
+简化字库函数调用逻辑，添加utf8代码逻辑。
+
+使用utf8的时候，keil中，Options → C/C++ → Misc Controls 里加
+
+--no_multibyte_chars
+
+![](https://cdn.nlark.com/yuque/0/2025/png/48302010/1764335369454-605ac7be-adb8-4310-b516-93226b65c143.png)
+
+### 12.5更新
+加入各种大小的英文数字，flash用量减少26kb！！！
+
+和多个bin文件为一个，现在只要下一次了！
 

@@ -38,10 +38,11 @@ extern "C"
 {
 #endif
 
-#include "init.h"
+
 #include <stdio.h>
 #include "lcd_fonts.h"
 #include "lcd_image.h"
+#include "init.h"
 
 #ifdef LCD_SPI_ENABLE
     typedef struct _pFont pFONT; // 前向声明
@@ -76,7 +77,7 @@ extern "C"
      *                             配置是否用外部字库，以及编码方式
      ******************************************************************************/
 #define USE_FLASH_FONT /*!< 定义了：使用Flash字库, 注释后：使用内置取模字库 */
-// #define IS_GB2312 /*!< 定义了：使用gb2312, 注释后：使用UTF8 */
+// #define IS_GB2312 /*!< 在使用flash字库的前提下，定义了：使用gb2312, 注释后：使用UTF8 */
 
 #ifndef FLASH_FONT_ENABLE
     #ifdef USE_FLASH_FONT

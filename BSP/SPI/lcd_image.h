@@ -54,7 +54,7 @@ extern "C"
      * @brief 图片数据数组声明
      * @note  实际数据定义在 lcd_image.c 中
      */
-    extern const unsigned char gImage_1[];
+    // extern const unsigned char gImage_1[];
 
 #ifdef __cplusplus
 }
